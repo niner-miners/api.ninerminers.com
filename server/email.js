@@ -10,8 +10,14 @@ configure();
 content();
 
 module.exports = function (req, res) {
-   // ensure matching is correct
+   // input validation
    req.params.email = req.params.email.toLowerCase();
+
+   req.params.first = req.params.first[0].toUpperCase() 
+                      + req.params.first.substring(1).toLowerCase();
+
+   req.params.last = req.params.last[0].toUpperCase() 
+                      + req.params.last.substring(1).toLowerCase();
 
    // check email for UNCC address
    var isValidEmail = req.params.email.match(/^[a-zA-Z]+@uncc\.edu$/);
@@ -24,41 +30,24 @@ module.exports = function (req, res) {
 
    saveToDatabase();
 
+   // add user to staging list
    function saveToDatabase () {
-      var username_old;
-
-      client.query({
-         TableName: 'whitelist',
-         KeyConditionExpression: "#email = :email",
-         ExpressionAttributeNames:{
-            "#email": "email"
-         },
-         ExpressionAttributeValues: {
-            ":email": req.params.email
+      client.put({
+         TableName: 'whitelist-unverified',
+         Item: {
+            code,
+            date: (new Date()).toString(),
+            email: req.params.email,
+            first: req.params.first,
+            last: req.params.last,
+            username: req.params.username,
          }
-      }, (err, data) => {
-         // hande error
-         if (err) return res.sendStatus(500);
-
-         // save old username if user already exists
-         if (data.Count) username_old = data.Items[0].username;
-         
-         client.put({
-            TableName: 'whitelist',
-            Item: {
-               email: req.params.email,
-               first: 'User',
-               last: 'Smith',
-               username: 'an_mc_user',
-               username_old,
-               verification: code
-            }
-         }, (err) => {
-            err ? res.sendStatus(500) : sendEmail();
-         });
+      }, (err) => {
+         err ? res.sendStatus(500) : sendEmail();
       });
    }
 
+   // send code to move to whitelist
    function sendEmail () {
       ses.sendEmail({
          Source: 'Niner Miners <whitelist@ninerminers.com>',
@@ -76,7 +65,7 @@ module.exports = function (req, res) {
             }
          }
       }, (err) => {
-         res.sendStatus(err ? 500 : 200)
+         res.sendStatus(err ? 500 : 200);
       });
    }
 

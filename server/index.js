@@ -6,7 +6,7 @@ var app = express();
 var api = express.Router();
 
 app.use('/api/', api);
-api.post('/email/:email', email);
-api.post('/whitelist/:code', whitelist);
+api.post('/email/:email/:first/:last/:username/', email);
+api.post('/whitelist/:code/', whitelist);
 
-app.listen(3000);
+app.listen(process.env.PORT || 3000);
