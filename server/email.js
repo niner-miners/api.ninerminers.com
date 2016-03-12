@@ -1,13 +1,7 @@
-var AWS = require('aws-sdk');
 var fs = require('fs');
 var path = require('path');
 
-var ses, client; // AWS
-var html;
-
-debug();
-configure();
-content();
+var html = render();
 
 module.exports = function (req, res) {
    // input validation
@@ -32,7 +26,7 @@ module.exports = function (req, res) {
 
    // add user to staging list
    function saveToDatabase () {
-      client.put({
+      AWS.client.put({
          TableName: 'whitelist-unverified',
          Item: {
             code,
@@ -49,7 +43,7 @@ module.exports = function (req, res) {
 
    // send code to move to whitelist
    function sendEmail () {
-      ses.sendEmail({
+      AWS.ses.sendEmail({
          Source: 'Niner Miners <whitelist@ninerminers.com>',
          Destination: {
             ToAddresses: [ req.params.email ]
@@ -71,23 +65,11 @@ module.exports = function (req, res) {
 
 }
 
-function configure () {
-   AWS.config.region = 'us-east-1';
-   ses = new AWS.SES({apiVersion: '2010-12-01'});
-   client = new AWS.DynamoDB.DocumentClient();
-}
-
-function content () {
+function render () {
    var views = path.join(__dirname, '../views/');
 
-   fs.readFile(path.join(views, 'email.html'), (err, rawHTML) => {
-      fs.readFile(path.join(views, 'email.css'), (err, rawCSS) => {
-         html = rawHTML.toString()
-            .replace('@css', rawCSS.toString());
-      });
-   });
-}
+   var html = fs.readFileSync(path.join(views, 'email.html'));
+   var css = fs.readFileSync(path.join(views, 'email.css'));
 
-function debug () {
-   AWS.config.credentials = new AWS.SharedIniFileCredentials({profile: 'niner-miners'});
+   return html.toString().replace('@css', css.toString());
 }
