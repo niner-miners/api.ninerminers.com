@@ -30,7 +30,7 @@ module.exports = function (req, res) {
          TableName: 'whitelist-unverified',
          Item: {
             code,
-            date: (new Date()).toString(),
+            date: (new Date()).getTime(),
             email: req.params.email,
             first: req.params.first,
             last: req.params.last,
