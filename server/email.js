@@ -14,7 +14,7 @@ module.exports = function (req, res) {
                       + req.params.last.substring(1).toLowerCase();
 
    // check email for UNCC address
-   var isValidEmail = req.params.email.match(/^[a-zA-Z]+@uncc\.edu$/);
+   var isValidEmail = req.params.email.match(/^[a-zA-Z0-9]*@uncc\.edu$/);
 
    // handle unathorized
    if (!isValidEmail) return res.sendStatus(401);
