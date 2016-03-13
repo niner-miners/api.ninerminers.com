@@ -33,25 +33,25 @@ module.exports = function (req, res) {
          // unwhitelist old username
          removeOldFromWhitelist(user.email, () => {
             // continue to add new to whitelist
-            cp.exec(`echo ${EXEC} whitelist add ${user.username}`, deleteToken);
+            cp.exec(`${EXEC} whitelist add ${user.username}`, deleteToken);
          });
       });
    }
 
    // returns username of old
    function removeOldFromWhitelist (email, callback) {
-      AWS.client.query({
+      AWS.client.scan({
          TableName : 'whitelist',
          Key: {
             'email': email
          }
       }, (err, data) => {
-         if (err || !data.Count) 
-            return callback();
+         if (err) return res.sendStatus(500);
+         if (!data.Count) return callback();
          
          var user = data.Items[0];
 
-         cp.exec(`echo ${EXEC} whitelist remove ${user.username}`, callback);
+         cp.exec(`${EXEC} whitelist remove ${user.username}`, callback);
       });
    }
 
