@@ -8,8 +8,8 @@ var whitelist = require('./whitelist');
 // save AWS config to the global scope
 global.AWS = require('./aws');
 
-// save exec script to global scope
-global.EXEC = path.join(process.env.HOME, 'core/actions/exec');
+// save Minecraft command to global function
+global.command = require('./command');
 
 // create routers
 var app = express();
@@ -19,7 +19,7 @@ var api = express.Router();
 app.use('/api/', api);
 
 // configure API endpoints
-api.post('/email/:email/:first/:last/:username/', email);
+api.post('/new/:email/:first/:last/:username/', email);
 api.post('/whitelist/:code/', whitelist);
 
 // start server

@@ -1,7 +1,5 @@
 var cp = require('child_process');
 
-const EXEC = '/home/nick/Desktop/niner-miners/core/actions/exec';
-
 module.exports = function (req, res) {
    var query = {
          TableName: 'whitelist-unverified',
@@ -14,11 +12,15 @@ module.exports = function (req, res) {
       if (err || !data.Count) 
          return res.sendStatus(500);
 
-      // pass verified user
-      addToWhitelist(data.Items[0]);
+      var user = data.Items[0];
+
+      // check for old credentials, update / create
+      removeOldUsername(user, () => {
+         addToWhitelist(user, deleteToken);
+      });
    });
 
-   function addToWhitelist (user) {
+   function addToWhitelist (user, callback) {
       AWS.client.put({
          TableName: 'whitelist',
          Item: {
@@ -29,21 +31,16 @@ module.exports = function (req, res) {
          }
       }, (err) => {
          if (err) return res.sendStatus(500);
-
-         // unwhitelist old username
-         removeOldFromWhitelist(user.email, () => {
-            // continue to add new to whitelist
-            cp.exec(`${EXEC} whitelist add ${user.username}`, deleteToken);
-         });
+         command(`whitelist add ${user.username}`, callback);
       });
    }
 
    // returns username of old
-   function removeOldFromWhitelist (email, callback) {
+   function removeOldUsername (user, callback) {
       AWS.client.scan({
          TableName : 'whitelist',
          Key: {
-            'email': email
+            'email': user.email
          }
       }, (err, data) => {
          if (err) return res.sendStatus(500);
@@ -51,7 +48,7 @@ module.exports = function (req, res) {
          
          var user = data.Items[0];
          
-         cp.exec(`${EXEC} whitelist remove ${user.username}`, callback);
+         command(`whitelist remove ${user.username}`, callback);
       });
    }
 
