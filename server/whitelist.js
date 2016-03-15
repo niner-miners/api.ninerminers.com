@@ -50,7 +50,7 @@ module.exports = function (req, res) {
          if (!data.Count) return callback();
          
          var user = data.Items[0];
-
+         
          cp.exec(`${EXEC} whitelist remove ${user.username}`, callback);
       });
    }
