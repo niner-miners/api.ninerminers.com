@@ -3,6 +3,7 @@
   "dependencies": {
     "aws-sdk": "^2.2.43",
     "express": "^4.13.4",
-    "node-schedule": "^1.1.0"
+    "node-schedule": "^1.1.0",
+    "request": "^2.69.0"
   }
 }
