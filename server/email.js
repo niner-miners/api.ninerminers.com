@@ -79,6 +79,11 @@ module.exports = function (req, res) {
    function verifyUsername (callback) {
       request(`https://api.mojang.com/users/profiles/minecraft/${req.params.username}`, (err, outRes, body) => {
          if (outRes.statusCode == 204) return res.sendStatus(406); // not acceptable
+
+         // retreive correct capitalization
+         req.params.username = JSON.parse(body).name;
+
+         // run next logic step
          callback();
       });
    }
