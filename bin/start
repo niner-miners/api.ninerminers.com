@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 const app = require('../app');
 
-const x = process.env;
+const $ = process.env;
 
 const config = {
-  email: x.VALID_EMAIL || 'uncc.edu',
-  port: x.PORT || 3000,
+  domain: $.DOMAIN || 'localhost',
+  email: $.VALID_EMAIL || 'uncc.edu',
+  port: $.PORT || 3000,
 }
 
 app(config).listen(config.port);
