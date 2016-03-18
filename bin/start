@@ -1,2 +1,11 @@
 #!/usr/bin/env node
-console.log('start');
+const app = require('../app');
+
+const x = process.env;
+
+const config = {
+  email: x.VALID_EMAIL || 'uncc.edu',
+  port: x.PORT || 3000,
+}
+
+app(config).listen(config.port);
