@@ -1,8 +1,8 @@
 <div style="text-align:center">
 
-# Niner Miners
+# @name
 
-##### The Official Minecraft Club of UNC Charlotte
+##### @moto
 
 <br />
 

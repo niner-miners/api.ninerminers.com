@@ -4,6 +4,10 @@ const app = require('../app');
 const $ = process.env;
 
 const config = {
+  app: {
+    moto: 'The Official Minecraft Club of UNC Charlotte',
+    name: 'Niner Miners',
+  },
   domain: $['DOMAIN'] || 'localhost',
   email: $['VALID_EMAIL'] || 'uncc.edu',
   port: $['PORT'] || 3000,
