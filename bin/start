@@ -4,9 +4,9 @@ const app = require('../app');
 const $ = process.env;
 
 const config = {
-  domain: $.DOMAIN || 'localhost',
-  email: $.VALID_EMAIL || 'uncc.edu',
-  port: $.PORT || 3000,
+  domain: $['DOMAIN'] || 'localhost',
+  email: $['VALID_EMAIL'] || 'uncc.edu',
+  port: $['PORT'] || 3000,
 }
 
 app(config).listen(config.port);
