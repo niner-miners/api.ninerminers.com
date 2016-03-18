@@ -1,9 +1,25 @@
 {
-  "main": "server/index.js",
-  "dependencies": {
-    "aws-sdk": "^2.2.43",
-    "express": "^4.13.4",
-    "node-schedule": "^1.1.0",
-    "request": "^2.69.0"
+  "name": "niner-miners-api",
+  "author": "Niner Miners",
+  "contributers": [
+    {
+      "name": "Nick Breaton",
+      "email": "nick@breaton.com"
+    }
+  ],
+  "scripts": {
+    "start": "bin/start",
+    "dev": "nodemon bin/start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/niner-miners/niner-miners-api.git"
+  },
+  "bugs": {
+    "url": "https://github.com/niner-miners/niner-miners-api/issues"
+  },
+  "homepage": "http://api.ninerminers.com",
+  "devDependencies": {
+    "nodemon": "1.9.1"
   }
 }
